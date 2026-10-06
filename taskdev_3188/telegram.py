@@ -22,8 +22,7 @@ def format_report_message(report: dict, build_url: str = "", build_number: str =
     has_events = changed > 0 or errors > 0 or unavailable > 0
     header = "⚠️ <b>Найдены события</b>" if has_events else "✅ <b>Проверка завершена</b>"
     lines = [
-        "🔎 <b>TASKDEV-3188</b>",
-        "<code>SEO monitor</code>",
+        "🔎 <b>SEO monitor</b>",
         "",
         header,
         "━━━━━━━━━━━━━━━━",
