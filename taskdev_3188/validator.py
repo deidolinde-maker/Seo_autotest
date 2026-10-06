@@ -36,6 +36,8 @@ def _invalid_required(values, placeholder: Optional[str]):
 
 
 def validate_page(current: PageSnapshot, baseline: Optional[PageSnapshot], site: str) -> ValidationResult:
+    if baseline and baseline.fetch_status == "failed" and baseline.error == "redirect":
+        return ValidationResult(url=current.url, status="пропущено", fetch_error="baseline_redirect")
     if current.fetch_status != "success":
         return ValidationResult(
             url=current.url,

@@ -42,10 +42,16 @@ def main(argv=None) -> int:
         return 0
 
     urls = read_urls(args.urls)
-    snapshots = Collector(delay=args.delay).collect(urls)
+    baseline = load_snapshot(baseline_path)
+    redirect_urls = {
+        url for url, snapshot in baseline.items()
+        if url in urls and snapshot.fetch_status == "failed" and snapshot.error == "redirect"
+    }
+    urls_to_check = [url for url in urls if url not in redirect_urls]
+    snapshots = Collector(delay=args.delay).collect(urls_to_check)
+    snapshots.extend(baseline[url] for url in redirect_urls if url in baseline)
     save_snapshot(current_path, snapshots, utc_now())
     current = load_snapshot(current_path)
-    baseline = load_snapshot(baseline_path)
     results = [
         validate_page(snapshot, baseline.get(url), site_for_url(url) if args.site == "auto" else args.site)
         for url, snapshot in current.items()

@@ -12,6 +12,7 @@ def build_report(results: Iterable[ValidationResult], generated_at: str) -> dict
         "changed": sum(item.status == "изменена" for item in items),
         "errors": sum(item.status == "ошибка" for item in items),
         "unavailable": sum(item.status == "не удалось проверить" for item in items),
+        "skipped": sum(item.status == "пропущено" for item in items),
         "ok": sum(item.status == "ОК" for item in items),
     }
     return {"generated_at": generated_at, "counters": counters, "pages": [item.to_dict() for item in items]}

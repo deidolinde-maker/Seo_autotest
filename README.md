@@ -29,6 +29,10 @@ Validator генерирует `allure-results`; Jenkinsfile публикует 
 Plugin. Если плагин не установлен, сам Validator и JSON-отчёт продолжают работать,
 но Allure-вкладка в Jenkins не будет опубликована.
 
+URL, для которого Collector в baseline зафиксировал `redirect`, Validator не запрашивает
+повторно и отображает как `пропущено`. После успешного ответа Collector URL автоматически
+возвращается в обычную проверку.
+
 На первом этапе `urls.txt` берётся из checkout. Перед production-запуском нужно
 вынести `state/` на persistent Jenkins volume или во внешнее хранилище: очистка
 workspace до этого момента отключена намеренно, иначе baseline будет потерян.

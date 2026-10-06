@@ -11,6 +11,8 @@ from .models import ValidationResult
 
 
 def _allure_status(result: ValidationResult) -> str:
+    if result.status == "пропущено":
+        return "skipped"
     return "passed" if result.status == "ОК" else "failed"
 
 
