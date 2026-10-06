@@ -30,7 +30,7 @@ pipeline {
 
     triggers {
         // Replace with the agreed client timezone and schedule before enabling in production.
-        cron('TZ=Europe/Moscow\n0 6 * * *')
+        cron('TZ=Europe/Moscow\n0 7 * * *')
     }
 
     stages {
