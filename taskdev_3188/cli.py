@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
 
 from .collector import Collector, utc_now
 from .report import save_report
-from .storage import load_snapshot, read_urls, save_snapshot, write_json_atomic
+from .storage import load_snapshot, read_urls, save_snapshot
 from .validator import site_for_url, validate_page
 
 
@@ -18,8 +17,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
     collect = subparsers.add_parser("collect", help="manual current snapshot")
     collect.add_argument("--delay", type=float, default=0.0)
-    subparsers.add_parser("approve", help="promote current snapshot to approved baseline")
-    subparsers.add_parser("validate", help="compare current snapshot with baseline")
+    validate = subparsers.add_parser("validate", help="collect current state and compare with baseline")
+    validate.add_argument("--delay", type=float, default=0.0)
     return parser
 
 
@@ -34,16 +33,15 @@ def main(argv=None) -> int:
         urls = read_urls(args.urls)
         snapshots = Collector(delay=args.delay).collect(urls)
         save_snapshot(current_path, snapshots, utc_now())
+        # Collector is the only command that promotes a snapshot to baseline.
+        save_snapshot(baseline_path, snapshots, utc_now())
         print(f"Collected {len(snapshots)} URL(s) into {current_path}")
-        return 0
-
-    if args.command == "approve":
-        if not current_path.exists():
-            raise SystemExit("Current snapshot does not exist; run collect first")
-        write_json_atomic(baseline_path, json.loads(current_path.read_text(encoding="utf-8")))
         print(f"Approved baseline updated: {baseline_path}")
         return 0
 
+    urls = read_urls(args.urls)
+    snapshots = Collector(delay=args.delay).collect(urls)
+    save_snapshot(current_path, snapshots, utc_now())
     current = load_snapshot(current_path)
     baseline = load_snapshot(baseline_path)
     results = [

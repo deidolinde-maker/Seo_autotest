@@ -10,8 +10,8 @@ pipeline {
     parameters {
         choice(
             name: 'RUN_MODE',
-            choices: ['validate', 'collect', 'approve'],
-            description: 'validate — scheduled check; collect — manual snapshot; approve — explicitly promote snapshot to baseline'
+            choices: ['validate', 'collect'],
+            description: 'validate — scheduled live check; collect — manual snapshot and baseline update'
         )
         choice(
             name: 'SITE',
@@ -33,8 +33,6 @@ pipeline {
                         set -eu
                         if [ "${RUN_MODE}" = "collect" ]; then
                             python3 -m taskdev_3188.cli --urls urls.txt --state-dir state collect
-                        elif [ "${RUN_MODE}" = "approve" ]; then
-                            python3 -m taskdev_3188.cli --urls urls.txt --state-dir state approve
                         else
                             python3 -m taskdev_3188.cli --urls urls.txt --state-dir state --site "${SITE}" validate
                         fi
