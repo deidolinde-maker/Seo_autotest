@@ -29,6 +29,17 @@ Validator генерирует `allure-results`; Jenkinsfile публикует 
 Plugin. Если плагин не установлен, сам Validator и JSON-отчёт продолжают работать,
 но Allure-вкладка в Jenkins не будет опубликована.
 
+## Telegram
+
+Jenkins Validator использует существующий proxy transport через Credentials:
+
+- `telegram_proxy_url`;
+- `telegram_proxy_auth_secret`;
+- `telegram_proxy_creds_seo`.
+
+`collect` уведомления не отправляет. Если отправка Telegram не удалась в режиме
+`validate`, pipeline завершается с кодом `2`.
+
 URL, для которого Collector в baseline зафиксировал `redirect`, Validator не запрашивает
 повторно и отображает как `пропущено`. После успешного ответа Collector URL автоматически
 возвращается в обычную проверку.
