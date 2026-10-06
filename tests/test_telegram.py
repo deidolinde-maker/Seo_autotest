@@ -12,6 +12,7 @@ class TelegramTests(unittest.TestCase):
             "https://jenkins.example/job/1/",
             "17",
         )
+        self.assertNotIn("TASKDEV-3188", message)
         self.assertIn("Всё в норме", message)
         self.assertIn("⏭ Пропущено redirect URL: <b>12</b>", message)
         self.assertIn("Jenkins build #17", message)
