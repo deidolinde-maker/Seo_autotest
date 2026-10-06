@@ -14,6 +14,7 @@
 - `state/approved_baseline.json` — последний согласованный эталон.
 - `state/current_snapshot.json` — последний собранный снимок.
 - `state/validation_report.json` — последний результат проверки.
+- `allure-results/` — Allure result files, по одному тесту на URL.
 - При смешанном списке URL сайт определяется автоматически по hostname; `--site`
   можно использовать для контролируемого запуска одного набора данных.
 
@@ -23,6 +24,10 @@
 
 - `validate` — плановая проверка;
 - `collect` — ручной сбор snapshot и обновление baseline.
+
+Validator генерирует `allure-results`; Jenkinsfile публикует их через Allure Jenkins
+Plugin. Если плагин не установлен, сам Validator и JSON-отчёт продолжают работать,
+но Allure-вкладка в Jenkins не будет опубликована.
 
 На первом этапе `urls.txt` берётся из checkout. Перед production-запуском нужно
 вынести `state/` на persistent Jenkins volume или во внешнее хранилище: очистка

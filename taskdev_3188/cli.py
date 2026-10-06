@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from .collector import Collector, utc_now
+from .allure_report import write_allure_results
 from .report import save_report
 from .storage import load_snapshot, read_urls, save_snapshot
 from .validator import site_for_url, validate_page
@@ -14,6 +15,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--urls", default="urls.txt")
     parser.add_argument("--state-dir", default="state")
     parser.add_argument("--site", choices=("auto", "101", "mol", "pol"), default="auto")
+    parser.add_argument("--allure-dir", default="allure-results")
     subparsers = parser.add_subparsers(dest="command", required=True)
     collect = subparsers.add_parser("collect", help="manual current snapshot")
     collect.add_argument("--delay", type=float, default=0.0)
@@ -49,6 +51,7 @@ def main(argv=None) -> int:
         for url, snapshot in current.items()
     ]
     report = save_report(report_path, results, utc_now())
+    write_allure_results(results, args.allure_dir)
     print(report["counters"])
     return 1 if any(report["counters"][key] for key in ("changed", "errors", "unavailable")) else 0
 

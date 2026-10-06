@@ -34,7 +34,7 @@ pipeline {
                         if [ "${RUN_MODE}" = "collect" ]; then
                             python3 -m taskdev_3188.cli --urls urls.txt --state-dir state collect
                         else
-                            python3 -m taskdev_3188.cli --urls urls.txt --state-dir state --site "${SITE}" validate
+                            python3 -m taskdev_3188.cli --urls urls.txt --state-dir state --site "${SITE}" --allure-dir allure-results validate
                         fi
                     '''
                 }
@@ -45,6 +45,7 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'taskdev_3188/state/*.json', allowEmptyArchive: true, fingerprint: true
+            allure includeProperties: false, jdk: '', results: [[path: 'taskdev_3188/allure-results']]
             // Do not clean the workspace until state is moved to a persistent Jenkins volume.
         }
     }
