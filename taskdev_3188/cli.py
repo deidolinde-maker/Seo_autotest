@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 
 from .collector import Collector, utc_now
 from .allure_report import write_allure_results
 from .report import save_report
 from .storage import load_snapshot, read_urls, save_snapshot
+from .telegram import send_report
 from .validator import site_for_url, validate_page
 
 
@@ -58,6 +60,9 @@ def main(argv=None) -> int:
     ]
     report = save_report(report_path, results, utc_now())
     write_allure_results(results, args.allure_dir)
+    if not send_report(report, os.getenv("BUILD_URL", "")):
+        print("Telegram notification failed")
+        return 2
     print(report["counters"])
     return 1 if any(report["counters"][key] for key in ("changed", "errors", "unavailable")) else 0
 
