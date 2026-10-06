@@ -1,0 +1,42 @@
+# TASKDEV-3188 SEO monitor
+
+Новый мониторинг строится отдельно от старого `seo_tests`.
+
+## Режимы
+
+- `Collector` запускается вручную и создаёт или обновляет согласованный baseline.
+- `Validator` запускается по расписанию и сравнивает текущее состояние страниц с baseline.
+- `Validator` никогда не изменяет baseline автоматически.
+
+## Файлы состояния
+
+- `urls.txt` — ручной список URL, по одному URL в строке.
+- `state/approved_baseline.json` — последний согласованный эталон.
+- `state/current_snapshot.json` — последний собранный снимок.
+- `state/validation_report.json` — последний результат проверки.
+- При смешанном списке URL сайт определяется автоматически по hostname; `--site`
+  можно использовать для контролируемого запуска одного набора данных.
+
+## Jenkins
+
+`Jenkinsfile` поддерживает три режима:
+
+- `validate` — плановая проверка;
+- `collect` — ручной сбор текущего snapshot;
+- `approve` — ручное утверждение snapshot как нового baseline.
+
+На первом этапе `urls.txt` берётся из checkout. Перед production-запуском нужно
+вынести `state/` на persistent Jenkins volume или во внешнее хранилище: очистка
+workspace до этого момента отключена намеренно, иначе baseline будет потерян.
+
+Позже `urls.txt` можно передавать через Jenkins Secret Text с тем же именем файла;
+Python-код при этом менять не потребуется.
+
+## QA-источники
+
+Логика и тестовая стратегия подготовлены с учётом:
+
+- `docs/qa-kb/workflows/analyze-task.md`
+- `docs/qa-kb/core/test-design/techniques.md`
+- `TASKDEV-3188_v17.md`
+- `TASKDEV-3188_v17_QA_auto.md`
