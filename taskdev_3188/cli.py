@@ -60,7 +60,7 @@ def main(argv=None) -> int:
     ]
     report = save_report(report_path, results, utc_now())
     write_allure_results(results, args.allure_dir)
-    if not send_report(report, os.getenv("BUILD_URL", "")):
+    if not send_report(report, os.getenv("BUILD_URL", ""), os.getenv("BUILD_NUMBER", "")):
         print("Telegram notification failed")
         return 2
     print(report["counters"])

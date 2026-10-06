@@ -10,9 +10,11 @@ class TelegramTests(unittest.TestCase):
         message = format_report_message(
             {"counters": {"ok": 322, "changed": 0, "errors": 0, "unavailable": 0, "skipped": 12}},
             "https://jenkins.example/job/1/",
+            "17",
         )
-        self.assertIn("ОК", message)
-        self.assertIn("Пропущено redirect URL: 12", message)
+        self.assertIn("Всё в норме", message)
+        self.assertIn("⏭ Пропущено redirect URL: <b>12</b>", message)
+        self.assertIn("Jenkins build #17", message)
 
     def test_disabled_telegram_does_not_fail(self):
         with patch.dict(os.environ, {"TELEGRAM_ENABLED": "false"}, clear=False):
