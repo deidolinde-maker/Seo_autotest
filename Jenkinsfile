@@ -11,7 +11,7 @@ pipeline {
         TELEGRAM_ENABLED = 'true'
         TELEGRAM_PROXY_URL = credentials('telegram_proxy_url')
         TELEGRAM_PROXY_AUTH_SECRET = credentials('telegram_proxy_auth_secret')
-        TELEGRAM_PROXY_CREDS = credentials('telegram_proxy_creds_seo')
+        TELEGRAM_PROXY_CREDS = credentials('tg_proxy_creds_survarius')
         TELEGRAM_PROXY_TIMEOUT_SEC = '15'
     }
 
