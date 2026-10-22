@@ -4,14 +4,14 @@ pipeline {
     options {
         timestamps()
         disableConcurrentBuilds()
-        timeout(time: 30, unit: 'MINUTES')
+        timeout(time: 90, unit: 'MINUTES')
     }
 
     parameters {
         choice(
             name: 'SITE',
-            choices: ['101', 'mol', 'pol'],
-            description: 'Сайт, для которого нужно вручную обновить baseline'
+            choices: ['all', '101', 'mol', 'pol'],
+            description: 'Сайт для обновления baseline; all — последовательно все сайты'
         )
     }
 
@@ -20,7 +20,13 @@ pipeline {
             steps {
                 sh '''
                     set -eu
-                    python3 -m taskdev_3188.cli --urls urls.txt --state-dir "state/${SITE}" --site "${SITE}" collect
+                    if [ "${SITE}" = "all" ]; then
+                        for site in 101 mol pol; do
+                            python3 -m taskdev_3188.cli --urls urls.txt --state-dir "state/${site}" --site "${site}" collect
+                        done
+                    else
+                        python3 -m taskdev_3188.cli --urls urls.txt --state-dir "state/${SITE}" --site "${SITE}" collect
+                    fi
                 '''
             }
         }

@@ -24,7 +24,8 @@
 - `Jenkinsfile.101` — плановая проверка 101 в 07:00 по Москве;
 - `Jenkinsfile.mol` — плановая проверка МОЛ в 07:15 по Москве;
 - `Jenkinsfile.pol` — плановая проверка ПОЛ в 07:30 по Москве;
-- `Jenkinsfile.collector` — ручной сбор snapshot и обновление baseline выбранного сайта.
+- `Jenkinsfile.collector` — ручной сбор snapshot и обновление baseline выбранного сайта;
+  значение `all` последовательно обновляет baseline для 101, МОЛ и ПОЛ.
 
 Корневой `Jenkinsfile` оставлен как совместимый entry point для валидатора 101.
 Для новых Jenkins job нужно явно указать соответствующий путь к Jenkinsfile.
