@@ -33,8 +33,11 @@ def main(argv=None) -> int:
     baseline_path = state_dir / "approved_baseline.json"
     report_path = state_dir / "validation_report.json"
 
+    urls = read_urls(args.urls)
+    if args.site != "auto":
+        urls = [url for url in urls if site_for_url(url) == args.site]
+
     if args.command == "collect":
-        urls = read_urls(args.urls)
         snapshots = Collector(delay=args.delay).collect(urls)
         save_snapshot(current_path, snapshots, utc_now())
         # Collector is the only command that promotes a snapshot to baseline.
@@ -43,7 +46,6 @@ def main(argv=None) -> int:
         print(f"Approved baseline updated: {baseline_path}")
         return 0
 
-    urls = read_urls(args.urls)
     baseline = load_snapshot(baseline_path)
     redirect_urls = {
         url for url, snapshot in baseline.items()

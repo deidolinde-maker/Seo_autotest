@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+    parameters {
+        choice(
+            name: 'SITE',
+            choices: ['101', 'mol', 'pol'],
+            description: 'Сайт, для которого нужно вручную обновить baseline'
+        )
+    }
+
+    stages {
+        stage('Collect baseline') {
+            steps {
+                sh '''
+                    set -eu
+                    python3 -m taskdev_3188.cli --urls urls.txt --state-dir "state/${SITE}" --site "${SITE}" collect
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'state/*.json,state/**/*.json', allowEmptyArchive: true, fingerprint: true
+        }
+    }
+}

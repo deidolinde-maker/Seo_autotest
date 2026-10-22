@@ -10,20 +10,24 @@
 
 ## Файлы состояния
 
-- `urls.txt` — ручной список URL, по одному URL в строке.
-- `state/approved_baseline.json` — последний согласованный эталон.
-- `state/current_snapshot.json` — последний собранный снимок.
-- `state/validation_report.json` — последний результат проверки.
+- `urls.txt` — единый ручной список URL, по одному URL в строке.
+- `state/<site>/approved_baseline.json` — последний согласованный эталон сайта.
+- `state/<site>/current_snapshot.json` — последний собранный снимок сайта.
+- `state/<site>/validation_report.json` — последний результат проверки сайта.
 - `allure-results/` — Allure result files, по одному тесту на URL.
-- При смешанном списке URL сайт определяется автоматически по hostname; `--site`
-  можно использовать для контролируемого запуска одного набора данных.
+- Параметр `--site` отбирает из общего списка только URL выбранного сайта.
 
 ## Jenkins
 
-`Jenkinsfile` поддерживает три режима:
+В репозитории находятся отдельные Jenkinsfile:
 
-- `validate` — плановая проверка;
-- `collect` — ручной сбор snapshot и обновление baseline.
+- `Jenkinsfile.101` — плановая проверка 101 в 07:00 по Москве;
+- `Jenkinsfile.mol` — плановая проверка МОЛ в 07:15 по Москве;
+- `Jenkinsfile.pol` — плановая проверка ПОЛ в 07:30 по Москве;
+- `Jenkinsfile.collector` — ручной сбор snapshot и обновление baseline выбранного сайта.
+
+Корневой `Jenkinsfile` оставлен как совместимый entry point для валидатора 101.
+Для новых Jenkins job нужно явно указать соответствующий путь к Jenkinsfile.
 
 Validator генерирует `allure-results`; Jenkinsfile публикует их через Allure Jenkins
 Plugin. Если плагин не установлен, сам Validator и JSON-отчёт продолжают работать,
