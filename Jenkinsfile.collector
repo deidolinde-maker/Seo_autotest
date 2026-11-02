@@ -7,6 +7,10 @@ pipeline {
         timeout(time: 90, unit: 'MINUTES')
     }
 
+    environment {
+        SEO_SHARED_STATE_ROOT = '/var/lib/jenkins/shared/Seo_autotest/state'
+    }
+
     parameters {
         choice(
             name: 'SITE',
@@ -20,13 +24,18 @@ pipeline {
             steps {
                 sh '''
                     set -eu
+                    rm -rf state
+                    mkdir -p state
                     if [ "${SITE}" = "all" ]; then
                         for site in 101 mol pol; do
-                            python3 -m taskdev_3188.cli --urls urls.txt --state-dir "state/${site}" --site "${site}" collect
+                            mkdir -p "${SEO_SHARED_STATE_ROOT}/${site}"
+                            python3 -m taskdev_3188.cli --urls urls.txt --state-dir "${SEO_SHARED_STATE_ROOT}/${site}" --site "${site}" collect
                         done
                     else
-                        python3 -m taskdev_3188.cli --urls urls.txt --state-dir "state/${SITE}" --site "${SITE}" collect
+                        mkdir -p "${SEO_SHARED_STATE_ROOT}/${SITE}"
+                        python3 -m taskdev_3188.cli --urls urls.txt --state-dir "${SEO_SHARED_STATE_ROOT}/${SITE}" --site "${SITE}" collect
                     fi
+                    cp -R "${SEO_SHARED_STATE_ROOT}/." state/
                 '''
             }
         }

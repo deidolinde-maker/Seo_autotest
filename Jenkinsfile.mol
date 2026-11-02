@@ -13,6 +13,7 @@ pipeline {
         TELEGRAM_PROXY_AUTH_SECRET = credentials('telegram_proxy_auth_secret')
         TELEGRAM_PROXY_CREDS = credentials('tg_proxy_creds_survarius')
         TELEGRAM_PROXY_TIMEOUT_SEC = '15'
+        SEO_SHARED_STATE_ROOT = '/var/lib/jenkins/shared/Seo_autotest/state'
     }
 
     triggers {
@@ -22,13 +23,13 @@ pipeline {
     stages {
         stage('Get baseline') {
             steps {
-                copyArtifacts(
-                    projectName: 'SEO Collector',
-                    selector: lastSuccessful(),
-                    filter: 'state/mol/approved_baseline.json',
-                    fingerprintArtifacts: true
-                )
-                sh 'test -s state/mol/approved_baseline.json'
+                sh '''
+                    set -eu
+                    rm -rf state/mol allure-results
+                    mkdir -p state/mol
+                    test -s "${SEO_SHARED_STATE_ROOT}/mol/approved_baseline.json"
+                    cp -f "${SEO_SHARED_STATE_ROOT}/mol/approved_baseline.json" state/mol/approved_baseline.json
+                '''
             }
         }
 

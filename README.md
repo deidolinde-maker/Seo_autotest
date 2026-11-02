@@ -30,9 +30,11 @@
 Корневой `Jenkinsfile` оставлен как совместимый entry point для валидатора 101.
 Для новых Jenkins job нужно явно указать соответствующий путь к Jenkinsfile.
 
-Валидаторы получают `approved_baseline.json` через Copy Artifact Plugin из последнего
-успешного запуска job `SEO Collector`. Если baseline не найден, валидатор завершается
-до начала проверки, чтобы результаты не формировались без эталона.
+Collector сохраняет baseline в общей Jenkins-директории
+`/var/lib/jenkins/shared/Seo_autotest/state`. Каждый валидатор перед запуском
+копирует свой `approved_baseline.json` из этой директории в собственный workspace.
+Если baseline не найден, валидатор завершается до начала проверки, чтобы результаты
+не формировались без эталона. Copy Artifact Plugin для этой схемы не требуется.
 
 Validator генерирует `allure-results`; Jenkinsfile публикует их через Allure Jenkins
 Plugin. Если плагин не установлен, сам Validator и JSON-отчёт продолжают работать,
