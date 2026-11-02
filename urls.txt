@@ -1,15 +1,13 @@
 # URL source: legacy seo_tests/sites_config.json
 # Temporary local input for TASKDEV-3188; review against current requirements before production.
 
-# piter-online (123 URLs)
+# piter-online (107 URLs)
 https://piter-online.net/
 https://piter-online.net/domashniy-internet/podklyuchit-deshevyj-internet
 https://piter-online.net/domashniy-internet/podklyuchit-wifi
 https://piter-online.net/domashniy-internet/besplatnoe-podklyuchenie
 https://piter-online.net/domashniy-internet/podklyuchit-skorostnoj-internet
-https://piter-online.net/domashniy-internet/podklyuchit-internet-tv
 https://piter-online.net/domashniy-internet/podklyuchit-optovolokno
-https://piter-online.net/domashniy-internet/podklyuchit-provodnoj-internet
 https://piter-online.net/domashniy-internet/podklyuchit-1gbit
 https://piter-online.net/orders/tohome
 https://piter-online.net/rates
@@ -22,7 +20,6 @@ https://piter-online.net/rates/internet-100-mbit
 https://piter-online.net/rates/internet-300-mbit
 https://piter-online.net/rates/internet-500-mbit
 https://piter-online.net/rates/1gbit
-https://piter-online.net/rates/skorostnoj-internet
 https://piter-online.net/rates/gaming
 https://piter-online.net/rates/wifi
 https://piter-online.net/rates/provodnoj-internet
@@ -53,6 +50,7 @@ https://piter-online.net/operatory/tinkoff
 https://piter-online.net/operatory/megafon
 https://piter-online.net/operatory/sbermobile
 https://piter-online.net/operatory/yota
+https://piter-online.net/operatory/yota/reviews
 https://piter-online.net/operatory/beeline
 https://piter-online.net/ratesmobile
 https://piter-online.net/nomera
@@ -78,7 +76,6 @@ https://piter-online.net/operatory/mts/ratesmobile/perenos_nomera
 https://piter-online.net/operatory/megafon/ratesmobile/dlja-modema
 https://piter-online.net/operatory/yota/ratesmobile/dlja-noutbuka
 https://piter-online.net/operatory/yota/nomera
-https://piter-online.net/operatory/yota/reviews
 https://piter-online.net/about/company
 https://piter-online.net/about/oplata-i-garantii
 https://piter-online.net/about/contacts
@@ -113,15 +110,13 @@ https://piter-online.net/rates/internet-200-mbit
 https://piter-online.net/rates/s-routerom
 https://piter-online.net/rates/bezlimitnye
 
-# moskva-online (123 URLs)
+# moskva-online (107 URLs)
 https://www.moskvaonline.ru/
 https://www.moskvaonline.ru/domashniy-internet/podklyuchit-deshevyj-internet
 https://www.moskvaonline.ru/domashniy-internet/podklyuchit-wifi
 https://www.moskvaonline.ru/domashniy-internet/besplatnoe-podklyuchenie
 https://www.moskvaonline.ru/domashniy-internet/podklyuchit-skorostnoj-internet
-https://www.moskvaonline.ru/domashniy-internet/podklyuchit-internet-tv
 https://www.moskvaonline.ru/domashniy-internet/podklyuchit-optovolokno
-https://www.moskvaonline.ru/domashniy-internet/podklyuchit-provodnoj-internet
 https://www.moskvaonline.ru/domashniy-internet/podklyuchit-1gbit
 https://www.moskvaonline.ru/orders/tohome
 https://www.moskvaonline.ru/rates
@@ -134,7 +129,6 @@ https://www.moskvaonline.ru/rates/internet-100-mbit
 https://www.moskvaonline.ru/rates/internet-300-mbit
 https://www.moskvaonline.ru/rates/internet-500-mbit
 https://www.moskvaonline.ru/rates/1gbit
-https://www.moskvaonline.ru/rates/skorostnoj-internet
 https://www.moskvaonline.ru/rates/gaming
 https://www.moskvaonline.ru/rates/wifi
 https://www.moskvaonline.ru/rates/provodnoj-internet
@@ -165,6 +159,7 @@ https://www.moskvaonline.ru/operatory/tinkoff
 https://www.moskvaonline.ru/operatory/megafon
 https://www.moskvaonline.ru/operatory/sbermobile
 https://www.moskvaonline.ru/operatory/yota
+https://www.moskvaonline.ru/operatory/yota/reviews
 https://www.moskvaonline.ru/operatory/beeline
 https://www.moskvaonline.ru/ratesmobile
 https://www.moskvaonline.ru/nomera
@@ -190,7 +185,6 @@ https://www.moskvaonline.ru/operatory/mts/ratesmobile/perenos_nomera
 https://www.moskvaonline.ru/operatory/megafon/ratesmobile/dlja-modema
 https://www.moskvaonline.ru/operatory/yota/ratesmobile/dlja-noutbuka
 https://www.moskvaonline.ru/operatory/yota/nomera
-https://www.moskvaonline.ru/operatory/yota/reviews
 https://www.moskvaonline.ru/about/company
 https://www.moskvaonline.ru/about/oplata-i-garantii
 https://www.moskvaonline.ru/about/contacts
@@ -225,7 +219,7 @@ https://www.moskvaonline.ru/rates/internet-200-mbit
 https://www.moskvaonline.ru/rates/s-routerom
 https://www.moskvaonline.ru/rates/bezlimitnye
 
-# 101internet (127 URLs)
+# 101internet (110 URLs)
 https://101internet.ru/
 https://101internet.ru/orders/tohome
 https://101internet.ru/rates
@@ -235,9 +229,7 @@ https://101internet.ru/ekaterinburg/domashniy-internet/podklyuchit-deshevyj-inte
 https://101internet.ru/ekaterinburg/domashniy-internet/podklyuchit-wifi
 https://101internet.ru/ekaterinburg/domashniy-internet/besplatnoe-podklyuchenie
 https://101internet.ru/ekaterinburg/domashniy-internet/podklyuchit-skorostnoj-internet
-https://101internet.ru/ekaterinburg/domashniy-internet/podklyuchit-internet-tv
 https://101internet.ru/ekaterinburg/domashniy-internet/podklyuchit-optovolokno
-https://101internet.ru/ekaterinburg/domashniy-internet/podklyuchit-provodnoj-internet
 https://101internet.ru/ekaterinburg/domashniy-internet/podklyuchit-1gbit
 https://101internet.ru/ekaterinburg/orders/tohome
 https://101internet.ru/ekaterinburg/rates
@@ -250,7 +242,6 @@ https://101internet.ru/ekaterinburg/rates/internet-100-mbit
 https://101internet.ru/ekaterinburg/rates/internet-300-mbit
 https://101internet.ru/ekaterinburg/rates/internet-500-mbit
 https://101internet.ru/ekaterinburg/rates/1gbit
-https://101internet.ru/ekaterinburg/rates/skorostnoj-internet
 https://101internet.ru/ekaterinburg/rates/gaming
 https://101internet.ru/ekaterinburg/rates/wifi
 https://101internet.ru/ekaterinburg/rates/provodnoj-internet
@@ -278,10 +269,10 @@ https://101internet.ru/ekaterinburg/operatory
 https://101internet.ru/ekaterinburg/operatory/mts
 https://101internet.ru/ekaterinburg/operatory/tele-2
 https://101internet.ru/ekaterinburg/operatory/tinkoff
-https://101internet.ru/ekaterinburg/operatory/megafon
+https://101internet.ru/operatory/megafon
 https://101internet.ru/ekaterinburg/operatory/sbermobile
 https://101internet.ru/ekaterinburg/operatory/yota
-https://101internet.ru/ekaterinburg/operatory/beeline
+https://101internet.ru/operatory/beeline
 https://101internet.ru/ekaterinburg/ratesmobile
 https://101internet.ru/ekaterinburg/nomera
 https://101internet.ru/ekaterinburg/operatory/reviews
@@ -306,7 +297,6 @@ https://101internet.ru/ekaterinburg/operatory/mts/ratesmobile/perenos_nomera
 https://101internet.ru/ekaterinburg/operatory/megafon/ratesmobile/dlja-modema
 https://101internet.ru/ekaterinburg/operatory/yota/ratesmobile/dlja-noutbuka
 https://101internet.ru/ekaterinburg/operatory/yota/nomera
-https://101internet.ru/ekaterinburg/operatory/yota/reviews
 https://101internet.ru/about/company
 https://101internet.ru/about/oplata-i-garantii
 https://101internet.ru/about/contacts
