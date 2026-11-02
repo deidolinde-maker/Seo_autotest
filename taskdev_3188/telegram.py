@@ -20,9 +20,13 @@ def format_report_message(report: dict, build_url: str = "", build_number: str =
     checked = int(counters.get("ok", 0)) + changed + errors
 
     has_events = changed > 0 or errors > 0 or unavailable > 0
+    site_name = os.getenv("SEO_SITE_NAME", "").strip()
+    monitor_title = "SEO monitor"
+    if site_name:
+        monitor_title = f"SEO monitor — {site_name}"
     header = "⚠️ <b>Найдены события</b>" if has_events else "✅ <b>Проверка завершена</b>"
     lines = [
-        "🔎 <b>SEO monitor</b>",
+        f"🔎 <b>{html.escape(monitor_title)}</b>",
         "",
         header,
         "━━━━━━━━━━━━━━━━",
@@ -56,8 +60,9 @@ def send_report(report: dict, build_url: str = "", build_number: str = "") -> bo
     proxy_creds = os.getenv("TELEGRAM_PROXY_CREDS", "").strip()
     if not proxy_url or not auth_secret or not proxy_creds:
         return False
+    site_name = os.getenv("SEO_SITE_NAME", "").strip()
     payload = {
-        "title": "TASKDEV-3188 SEO monitor",
+        "title": f"SEO monitor — {site_name}" if site_name else "SEO monitor",
         "text": format_report_message(report, build_url, build_number),
         "creds": proxy_creds,
         "parse_mode": "HTML",

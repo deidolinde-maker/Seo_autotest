@@ -16,6 +16,7 @@ pipeline {
         TELEGRAM_PROXY_AUTH_SECRET = credentials('telegram_proxy_auth_secret')
         TELEGRAM_PROXY_CREDS = credentials('tg_proxy_creds_survarius')
         TELEGRAM_PROXY_TIMEOUT_SEC = '15'
+        SEO_SITE_NAME = '101'
         SEO_SHARED_STATE_ROOT = '/var/lib/jenkins/shared/Seo_autotest/state'
     }
 

@@ -36,6 +36,9 @@ Collector сохраняет baseline в общей Jenkins-директории
 Если baseline не найден, валидатор завершается до начала проверки, чтобы результаты
 не формировались без эталона. Copy Artifact Plugin для этой схемы не требуется.
 
+Название сайта передаётся в Telegram через `SEO_SITE_NAME`, поэтому в уведомлении
+отображается `SEO monitor — 101`, `SEO monitor — МОЛ` или `SEO monitor — ПОЛ`.
+
 Validator генерирует `allure-results`; Jenkinsfile публикует их через Allure Jenkins
 Plugin. Если плагин не установлен, сам Validator и JSON-отчёт продолжают работать,
 но Allure-вкладка в Jenkins не будет опубликована.

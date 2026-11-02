@@ -6,6 +6,12 @@ from taskdev_3188.telegram import format_report_message, send_report
 
 
 class TelegramTests(unittest.TestCase):
+    def test_message_contains_site_name(self):
+        with patch.dict(os.environ, {"SEO_SITE_NAME": "ПОЛ"}, clear=False):
+            message = format_report_message({"counters": {"ok": 1}})
+
+        self.assertIn("SEO monitor — ПОЛ", message)
+
     def test_ok_message_ignores_skipped_as_failure(self):
         message = format_report_message(
             {"counters": {"ok": 322, "changed": 0, "errors": 0, "unavailable": 0, "skipped": 12}},
