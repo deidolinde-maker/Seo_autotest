@@ -49,7 +49,7 @@ Jenkins Validator использует существующий proxy transport 
 
 - `telegram_proxy_url`;
 - `telegram_proxy_auth_secret`;
-- `tg_proxy_creds_survarius` (временно для текущего чата).
+- `telegram_proxy_creds_seo` для SEO-чата.
 
 `collect` уведомления не отправляет. Если отправка Telegram не удалась в режиме
 `validate`, pipeline завершается с кодом `2`.
