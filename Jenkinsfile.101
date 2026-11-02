@@ -20,6 +20,18 @@ pipeline {
     }
 
     stages {
+        stage('Get baseline') {
+            steps {
+                copyArtifacts(
+                    projectName: 'SEO Collector',
+                    selector: lastSuccessful(),
+                    filter: 'state/101/approved_baseline.json',
+                    fingerprintArtifacts: true
+                )
+                sh 'test -s state/101/approved_baseline.json'
+            }
+        }
+
         stage('Validate 101') {
             steps {
                 sh '''
