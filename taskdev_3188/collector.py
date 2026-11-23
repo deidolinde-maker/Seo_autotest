@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import time
 from datetime import datetime, timezone
+from http.client import HTTPException
 from typing import Iterable, List
 from urllib.error import HTTPError, URLError
 from urllib.request import HTTPRedirectHandler, Request, build_opener
@@ -106,7 +107,7 @@ class Collector:
                 http_status=response.status_code,
                 final_url=getattr(response, "url", url),
             )
-        except (HTTPError, URLError, TimeoutError, OSError) as exc:
+        except (HTTPError, URLError, TimeoutError, OSError, HTTPException) as exc:
             return PageSnapshot(url=url, fetch_status="failed", error=str(exc))
 
     def collect(self, urls: Iterable[str]) -> List[PageSnapshot]:

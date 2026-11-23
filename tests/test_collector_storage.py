@@ -2,6 +2,7 @@ import json
 import shutil
 import tempfile
 import unittest
+from http.client import IncompleteRead
 from pathlib import Path
 
 from taskdev_3188.collector import Collector
@@ -36,6 +37,11 @@ class SequencedSession:
         return self.responses.pop(0)
 
 
+class FailingSession:
+    def get(self, url, **kwargs):
+        raise IncompleteRead(b"partial response", 100)
+
+
 class CollectorStorageTests(unittest.TestCase):
     def test_redirect_is_not_followed(self):
         session = FakeSession(FakeResponse(301))
@@ -56,6 +62,11 @@ class CollectorStorageTests(unittest.TestCase):
         )
         self.assertEqual(result.h1, ["Документы"])
         self.assertEqual(len(session.calls), 2)
+
+    def test_incomplete_http_response_does_not_crash_collection(self):
+        result = Collector(session=FailingSession()).collect_one("https://example.test/page")
+        self.assertEqual(result.fetch_status, "failed")
+        self.assertIn("IncompleteRead", result.error)
 
     def test_snapshot_round_trip_and_deduplicated_urls(self):
         directory = tempfile.mkdtemp(prefix="test-storage-", dir=Path.cwd())
