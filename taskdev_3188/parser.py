@@ -6,9 +6,16 @@ from typing import List, Optional
 from .models import PageSnapshot
 
 
+# The application sends this temporary SSR heading before client-side
+# hydration. It is not part of the final visible SEO DOM and must not be
+# compared as a real H1.
+TRANSIENT_H1_VALUES = {"loading", "загрузка"}
+
+
 class _SEOHTMLParser(HTMLParser):
-    def __init__(self) -> None:
+    def __init__(self, *, include_transient: bool = False) -> None:
         super().__init__(convert_charrefs=True)
+        self.include_transient = include_transient
         self.title_values: List[str] = []
         self.description_values: List[str] = []
         self.h1_values: List[str] = []
@@ -37,16 +44,24 @@ class _SEOHTMLParser(HTMLParser):
         if tag == "title":
             self.title_values.append(value)
         elif tag == "h1":
-            self.h1_values.append(value)
+            if self.include_transient or value.casefold() not in TRANSIENT_H1_VALUES:
+                self.h1_values.append(value)
         elif tag == "h2":
             self.h2_values.append(value)
         self._active = None
         self._buffer = []
 
 
-def parse_html(url: str, html: str, *, http_status: int = 200, final_url: str | None = None) -> PageSnapshot:
+def parse_html(
+    url: str,
+    html: str,
+    *,
+    http_status: int = 200,
+    final_url: str | None = None,
+    include_transient: bool = False,
+) -> PageSnapshot:
     """Parse server HTML without executing JavaScript."""
-    parser = _SEOHTMLParser()
+    parser = _SEOHTMLParser(include_transient=include_transient)
     parser.feed(html)
     title = parser.title_values[0] if len(parser.title_values) == 1 else None
     description = parser.description_values[0] if len(parser.description_values) == 1 else None

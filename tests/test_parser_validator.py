@@ -20,6 +20,13 @@ class ParserValidatorTests(unittest.TestCase):
         self.assertEqual(snapshot.h1, ["H1"])
         self.assertEqual(snapshot.h2, ["First", "Second"])
 
+    def test_parser_ignores_transient_loading_h1(self):
+        snapshot = parse_html(
+            "https://example.test/documents",
+            "<body><h1>Loading</h1><h1>Документы</h1></body>",
+        )
+        self.assertEqual(snapshot.h1, ["Документы"])
+
     def test_changed_text_is_reported(self):
         baseline = PageSnapshot("/page", title="Old", description="D", h1=["H1"], h2=["A"])
         current = PageSnapshot("/page", title="New", description="D", h1=["H1"], h2=["A"])

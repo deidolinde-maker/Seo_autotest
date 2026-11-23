@@ -77,27 +77,35 @@ class Collector:
                 response.text,
                 http_status=response.status_code,
                 final_url=getattr(response, "url", url),
+                include_transient=True,
             )
             for attempt in range(1, self.settle_attempts):
                 if not self._is_loading_snapshot(snapshot):
                     break
                 if self.settle_delay:
                     time.sleep(self.settle_delay)
-                response = self.session.get(
+                next_response = self.session.get(
                     url,
                     timeout=self.timeout,
                     allow_redirects=False,
                     headers={"User-Agent": "TASKDEV-3188-seo-monitor/1.0"},
                 )
-                if response.status_code < 200 or response.status_code >= 300:
+                if next_response.status_code < 200 or next_response.status_code >= 300:
                     break
+                response = next_response
                 snapshot = parse_html(
                     url,
                     response.text,
                     http_status=response.status_code,
                     final_url=getattr(response, "url", url),
+                    include_transient=True,
                 )
-            return snapshot
+            return parse_html(
+                url,
+                response.text,
+                http_status=response.status_code,
+                final_url=getattr(response, "url", url),
+            )
         except (HTTPError, URLError, TimeoutError, OSError) as exc:
             return PageSnapshot(url=url, fetch_status="failed", error=str(exc))
 
