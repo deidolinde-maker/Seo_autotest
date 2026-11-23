@@ -41,7 +41,7 @@ pipeline {
             steps {
                 sh '''
                     set -eu
-                    python3 -m taskdev_3188.cli --urls urls.txt --state-dir state/101 --site 101 --allure-dir allure-results validate
+                    python3 -m taskdev_3188.cli --urls urls.txt --state-dir state/101 --site 101 --allure-dir allure-results validate --settle-attempts 3 --settle-delay 5
                 '''
             }
         }

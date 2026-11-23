@@ -21,8 +21,12 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
     collect = subparsers.add_parser("collect", help="manual current snapshot")
     collect.add_argument("--delay", type=float, default=0.0)
+    collect.add_argument("--settle-attempts", type=int, default=3)
+    collect.add_argument("--settle-delay", type=float, default=5.0)
     validate = subparsers.add_parser("validate", help="collect current state and compare with baseline")
     validate.add_argument("--delay", type=float, default=0.0)
+    validate.add_argument("--settle-attempts", type=int, default=3)
+    validate.add_argument("--settle-delay", type=float, default=5.0)
     return parser
 
 
@@ -38,7 +42,11 @@ def main(argv=None) -> int:
         urls = [url for url in urls if site_for_url(url) == args.site]
 
     if args.command == "collect":
-        snapshots = Collector(delay=args.delay).collect(urls)
+        snapshots = Collector(
+            delay=args.delay,
+            settle_attempts=args.settle_attempts,
+            settle_delay=args.settle_delay,
+        ).collect(urls)
         save_snapshot(current_path, snapshots, utc_now())
         # Collector is the only command that promotes a snapshot to baseline.
         save_snapshot(baseline_path, snapshots, utc_now())
@@ -52,7 +60,11 @@ def main(argv=None) -> int:
         if url in urls and snapshot.fetch_status == "failed" and snapshot.error == "redirect"
     }
     urls_to_check = [url for url in urls if url not in redirect_urls]
-    snapshots = Collector(delay=args.delay).collect(urls_to_check)
+    snapshots = Collector(
+        delay=args.delay,
+        settle_attempts=args.settle_attempts,
+        settle_delay=args.settle_delay,
+    ).collect(urls_to_check)
     snapshots.extend(baseline[url] for url in redirect_urls if url in baseline)
     save_snapshot(current_path, snapshots, utc_now())
     current = load_snapshot(current_path)

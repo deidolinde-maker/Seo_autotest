@@ -26,6 +26,16 @@ class FakeSession:
         return self.response
 
 
+class SequencedSession:
+    def __init__(self, responses):
+        self.responses = list(responses)
+        self.calls = []
+
+    def get(self, url, **kwargs):
+        self.calls.append((url, kwargs))
+        return self.responses.pop(0)
+
+
 class CollectorStorageTests(unittest.TestCase):
     def test_redirect_is_not_followed(self):
         session = FakeSession(FakeResponse(301))
@@ -33,6 +43,19 @@ class CollectorStorageTests(unittest.TestCase):
         self.assertEqual(result.fetch_status, "failed")
         self.assertEqual(result.error, "redirect")
         self.assertFalse(session.calls[0][1]["allow_redirects"])
+
+    def test_loading_heading_is_rechecked_after_settle_delay(self):
+        session = SequencedSession(
+            [
+                FakeResponse(text="<h1>Loading</h1><h1>Документы</h1>"),
+                FakeResponse(text="<h1>Документы</h1>"),
+            ]
+        )
+        result = Collector(session=session, settle_attempts=2, settle_delay=0).collect_one(
+            "https://example.test/page"
+        )
+        self.assertEqual(result.h1, ["Документы"])
+        self.assertEqual(len(session.calls), 2)
 
     def test_snapshot_round_trip_and_deduplicated_urls(self):
         directory = tempfile.mkdtemp(prefix="test-storage-", dir=Path.cwd())

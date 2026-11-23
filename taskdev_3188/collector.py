@@ -39,10 +39,24 @@ class _UrllibSession:
 class Collector:
     """Manual snapshot builder. It never writes the approved baseline."""
 
-    def __init__(self, session=None, timeout: float = 30.0, delay: float = 0.0):
+    def __init__(
+        self,
+        session=None,
+        timeout: float = 30.0,
+        delay: float = 0.0,
+        settle_attempts: int = 3,
+        settle_delay: float = 5.0,
+    ):
         self.session = session or _UrllibSession()
         self.timeout = timeout
         self.delay = delay
+        self.settle_attempts = max(1, settle_attempts)
+        self.settle_delay = max(0.0, settle_delay)
+
+    @staticmethod
+    def _is_loading_snapshot(snapshot: PageSnapshot) -> bool:
+        """Detect a transient loading heading without treating it as a product error."""
+        return any(value.strip().casefold() == "loading" for value in snapshot.h1)
 
     def collect_one(self, url: str) -> PageSnapshot:
         try:
@@ -58,7 +72,32 @@ class Collector:
                 return PageSnapshot(url=url, fetch_status="failed", http_status=response.status_code, error="not_found")
             if response.status_code < 200 or response.status_code >= 300:
                 return PageSnapshot(url=url, fetch_status="failed", http_status=response.status_code, error="http_error")
-            return parse_html(url, response.text, http_status=response.status_code, final_url=getattr(response, "url", url))
+            snapshot = parse_html(
+                url,
+                response.text,
+                http_status=response.status_code,
+                final_url=getattr(response, "url", url),
+            )
+            for attempt in range(1, self.settle_attempts):
+                if not self._is_loading_snapshot(snapshot):
+                    break
+                if self.settle_delay:
+                    time.sleep(self.settle_delay)
+                response = self.session.get(
+                    url,
+                    timeout=self.timeout,
+                    allow_redirects=False,
+                    headers={"User-Agent": "TASKDEV-3188-seo-monitor/1.0"},
+                )
+                if response.status_code < 200 or response.status_code >= 300:
+                    break
+                snapshot = parse_html(
+                    url,
+                    response.text,
+                    http_status=response.status_code,
+                    final_url=getattr(response, "url", url),
+                )
+            return snapshot
         except (HTTPError, URLError, TimeoutError, OSError) as exc:
             return PageSnapshot(url=url, fetch_status="failed", error=str(exc))
 

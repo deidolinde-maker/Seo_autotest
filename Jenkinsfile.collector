@@ -19,6 +19,10 @@ pipeline {
         )
     }
 
+    triggers {
+        cron('TZ=Europe/Moscow\n0 6 * * 1')
+    }
+
     stages {
         stage('Collect baseline') {
             steps {
@@ -29,11 +33,11 @@ pipeline {
                     if [ "${SITE}" = "all" ]; then
                         for site in 101 mol pol; do
                             mkdir -p "${SEO_SHARED_STATE_ROOT}/${site}"
-                            python3 -m taskdev_3188.cli --urls urls.txt --state-dir "${SEO_SHARED_STATE_ROOT}/${site}" --site "${site}" collect
+                            python3 -m taskdev_3188.cli --urls urls.txt --state-dir "${SEO_SHARED_STATE_ROOT}/${site}" --site "${site}" collect --settle-attempts 3 --settle-delay 5
                         done
                     else
                         mkdir -p "${SEO_SHARED_STATE_ROOT}/${SITE}"
-                        python3 -m taskdev_3188.cli --urls urls.txt --state-dir "${SEO_SHARED_STATE_ROOT}/${SITE}" --site "${SITE}" collect
+                        python3 -m taskdev_3188.cli --urls urls.txt --state-dir "${SEO_SHARED_STATE_ROOT}/${SITE}" --site "${SITE}" collect --settle-attempts 3 --settle-delay 5
                     fi
                     cp -R "${SEO_SHARED_STATE_ROOT}/." state/
                 '''
