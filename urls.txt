@@ -1477,7 +1477,6 @@ https://www.moskvaonline.ru/providers/uca-networks
 https://www.moskvaonline.ru/providers/uca-networks/rates
 https://www.moskvaonline.ru/providers/uca-networks/rates/domashnij-internet
 https://www.moskvaonline.ru/providers/uca-networks/rates/internet-i-tv
-https://www.moskvaonline.ru/providers/uca-networks/rates/nedorogoj-domashnij-internet
 https://www.moskvaonline.ru/providers/u-lan
 https://www.moskvaonline.ru/providers/ul-comnet
 https://www.moskvaonline.ru/providers/ultima
