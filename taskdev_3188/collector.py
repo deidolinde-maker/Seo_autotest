@@ -59,14 +59,36 @@ class Collector:
         """Detect a transient loading heading without treating it as a product error."""
         return any(value.strip().casefold() == "loading" for value in snapshot.h1)
 
+    def _get_with_retries(self, url: str):
+        last_error = None
+        for attempt in range(self.settle_attempts):
+            try:
+                response = self.session.get(
+                    url,
+                    timeout=self.timeout,
+                    allow_redirects=False,
+                    headers={"User-Agent": "TASKDEV-3188-seo-monitor/1.0"},
+                )
+                if response.status_code == 404 and attempt < self.settle_attempts - 1:
+                    if self.settle_delay:
+                        time.sleep(self.settle_delay)
+                    continue
+                return response
+            except HTTPError as exc:
+                last_error = exc
+                if exc.code != 404 or attempt >= self.settle_attempts - 1:
+                    raise
+            except (URLError, TimeoutError, OSError, HTTPException) as exc:
+                last_error = exc
+                if attempt >= self.settle_attempts - 1:
+                    raise
+            if self.settle_delay:
+                time.sleep(self.settle_delay)
+        raise last_error or RuntimeError("request failed")
+
     def collect_one(self, url: str) -> PageSnapshot:
         try:
-            response = self.session.get(
-                url,
-                timeout=self.timeout,
-                allow_redirects=False,
-                headers={"User-Agent": "TASKDEV-3188-seo-monitor/1.0"},
-            )
+            response = self._get_with_retries(url)
             if 300 <= response.status_code < 400:
                 return PageSnapshot(url=url, fetch_status="failed", http_status=response.status_code, error="redirect")
             if response.status_code in (404, 410):

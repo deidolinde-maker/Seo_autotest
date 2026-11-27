@@ -3,6 +3,7 @@ import shutil
 import tempfile
 import unittest
 from http.client import IncompleteRead
+from urllib.error import HTTPError
 from pathlib import Path
 
 from taskdev_3188.collector import Collector
@@ -34,7 +35,10 @@ class SequencedSession:
 
     def get(self, url, **kwargs):
         self.calls.append((url, kwargs))
-        return self.responses.pop(0)
+        response = self.responses.pop(0)
+        if isinstance(response, BaseException):
+            raise response
+        return response
 
 
 class FailingSession:
@@ -64,9 +68,21 @@ class CollectorStorageTests(unittest.TestCase):
         self.assertEqual(len(session.calls), 2)
 
     def test_incomplete_http_response_does_not_crash_collection(self):
-        result = Collector(session=FailingSession()).collect_one("https://example.test/page")
+        result = Collector(session=FailingSession(), settle_attempts=1, settle_delay=0).collect_one(
+            "https://example.test/page"
+        )
         self.assertEqual(result.fetch_status, "failed")
         self.assertIn("IncompleteRead", result.error)
+
+    def test_transient_404_is_retried(self):
+        error = HTTPError("https://example.test/page", 404, "Not Found", None, None)
+        session = SequencedSession([error, FakeResponse(text="<h1>Page</h1>")])
+        result = Collector(session=session, settle_attempts=2, settle_delay=0).collect_one(
+            "https://example.test/page"
+        )
+        self.assertEqual(result.fetch_status, "success")
+        self.assertEqual(result.h1, ["Page"])
+        self.assertEqual(len(session.calls), 2)
 
     def test_snapshot_round_trip_and_deduplicated_urls(self):
         directory = tempfile.mkdtemp(prefix="test-storage-", dir=Path.cwd())
